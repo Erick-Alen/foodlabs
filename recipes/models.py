@@ -5,7 +5,7 @@ class Recipe(models.Model):
     name = models.CharField(max_length=50)
     # blank is preferred for string fields
     description = models.TextField(blank=True)
-    owner = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    owner = models.ForeignKey("users.User", on_delete=models.CASCADE, related_name="recipes")
 
     def __repr__(self) -> str:
         return f"<[{self.id}] - {self.name}>"
