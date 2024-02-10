@@ -1,14 +1,19 @@
 from rest_framework import serializers
+from addresses.serializers import AddressSerializer
 
 class UserSerializer(serializers.Serializer):
-    # id = serializers.IntegerField(read_only=True)
+    # USER
     # username = serializers.CharField(max_length=100)
     # password = serializers.CharField(max_length=100)
+    id = serializers.IntegerField(read_only=True)
     first_name = serializers.CharField(max_length=20)
     last_name = serializers.CharField(max_length=20)
     email = serializers.EmailField()
-    # date_joined = serializers.DateTimeField(read_only=True)
-    # last_login = serializers.DateTimeField(read_only=True)
+    # created_at = serializers.DateTimeField(read_only=True)
+    # updated_at = serializers.DateTimeField(read_only=True)
+
+    # nested serialization
+    address = AddressSerializer(read_only=True)
 
     # def create(self, validated_data):
     #     return User.objects.create(**validated_data)

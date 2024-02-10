@@ -18,5 +18,6 @@ class UserView(APIView):
 
     def get(self, request: Request) -> Response:
         users = User.objects.all()
-        converted_users = [model_to_dict(user) for user in users]
-        return Response(converted_users, status=status.HTTP_200_OK)
+        # converted_users = [model_to_dict(user) for user in users]
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer, status=status.HTTP_200_OK)
