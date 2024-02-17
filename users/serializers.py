@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from addresses.serializers import AddressSerializer
+from recipes.serializers import RecipeSerializer
 
 class UserSerializer(serializers.Serializer):
     # USER
@@ -13,7 +14,8 @@ class UserSerializer(serializers.Serializer):
     # updated_at = serializers.DateTimeField(read_only=True)
 
     # nested serialization
-    address = AddressSerializer(read_only=True)
+    addresses = AddressSerializer(read_only=True)
+    recipes = RecipeSerializer(read_only=True, many=True)
 
     # def create(self, validated_data):
     #     return User.objects.create(**validated_data)
