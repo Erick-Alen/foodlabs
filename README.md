@@ -1,14 +1,23 @@
-### Relacionamento 1:1
+# Foodlabs
+
+This is a simple application
+
+## Explaining the relationship implementation into Django models
+
+### Relationship 1:1
 => Pode ser configurado em qualquer view, desde que seja declarado o nome `models.OneToOneField()` **em apenas uma view**
-### Relacionamento 1:N
+
+### Relationship 1:N
 => **Só pode ser configurado na view responsável pelo N na relação**, onde é utilizado o nome `models.foreignKey()` adereçando a sua respectiva view na variável "related_name"
-- Exemplo: `tabela1 = ManyToManyField("tabela2.nomeclasse", on_delete=models.CASCADE,  related_name="ingredients")`
-### Relacionamento N:N
+- Example: `table1 = ManyToManyField("tabela2.nomeclasse", on_delete=models.CASCADE,  related_name="ingredients")`
+
+### Relationship N:N
 => Pode ser configurado de ambos os lados, mas **em apenas uma view** utilizando o comando `models.ManyToManyField()`.
 
 
 
-### comando para executar a API:
+## Main commands to manage API:
+### Commands to execute API:
 Create the python virtual environment (the second `venv` can be which name you want, altough the convention is to name as `venv` as well).
 
 ```bash
