@@ -14,7 +14,8 @@ class UserSerializer(serializers.Serializer):
     # updated_at = serializers.DateTimeField(read_only=True)
 
     # nested serialization
-    addresses = AddressSerializer(read_only=True)
+    # field name that has to be defined in the object to send it to the API
+    address = AddressSerializer()
     recipes = RecipeSerializer(read_only=True, many=True)
 
     # def create(self, validated_data):
