@@ -21,7 +21,6 @@ class UserView(APIView):
         # create address
         address = Address.objects.create(**address_data, user=user)
 
-
         serializer = UserSerializer(user)
         # converted_user = model_to_dict(user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -32,24 +31,52 @@ class UserView(APIView):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class UserDetailedView(APIView):
+
     def get(self, request: Request, user_id: int) -> Response:
-        return Response({"message": "GET"}, status=status.HTTP_200_OK)
+        try:
+            found_user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response(
+                {"message": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = UserSerializer(found_user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
         users = User.objects.all()
         # converted_users = [model_to_dict(user) for user in users]
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
     def patch(self, request: Request, user_id: int) -> Response:
-        return Response({"message": "patch"}, status=status.HTTP_204_NO_CONTENT)
+        try:
+            found_user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response(
+                {"message": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = UserSerializer(data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        users = User.objects.all()
         # converted_users = [model_to_dict(user) for user in users]
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        for key, value in serializer.validated_data.items():
+            setattr(found_user, key, value)
+        # make changes into database
+        found_user.save()
+        serializer = UserSerializer(found_user)
+        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+
     def delete(self, request: Request, user_id: int) -> Response:
-        return Response({"message": "DELETE"}, status=status.HTTP_204_NO_CONTENT)
+        try:
+            found_user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response(
+                {"message": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
 
-        users = User.objects.all()
+        found_user.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
         # converted_users = [model_to_dict(user) for user in users]
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
