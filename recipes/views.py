@@ -1,3 +1,23 @@
-from django.shortcuts import render
+from rest_framework.views import APIView, status, Request, Response
+from .models import Recipe
+from .serializers import RecipeSerializer
+from ingredients.models import Ingredient
 
-# Create your views here.
+
+class RecipeView(APIView):
+    def post(self, req: Request) -> Response:
+        serializer = RecipeSerializer(data=req.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        ingredients = serializer.validated_data.pop("ingredients")
+        recipe = Recipe.objects.create(**serializer.validated_data)
+
+        # get the ingredient list
+
+        for ingredient_item in ingredients:
+            ingredient = Ingredient.objects.create(**ingredient_item)
+            ingredient.add(ingredient)
+
+        serializer = RecipeSerializer(recipe)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

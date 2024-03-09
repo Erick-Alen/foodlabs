@@ -4,9 +4,10 @@ from ipdb import set_trace
 from .models import User
 from addresses.models import Address
 from .serializers import UserSerializer
+from rest_framework.pagination import PageNumberPagination
 
 
-class UserView(APIView):
+class UserView(APIView, PageNumberPagination):
     def post(self, request: Request) -> Response:
         serializer = UserSerializer(data=request.data)
         if not serializer.is_valid():
@@ -27,9 +28,10 @@ class UserView(APIView):
 
     def get(self, request: Request) -> Response:
         users = User.objects.all()
+        result = self.paginate_queryset(users, request)
         # converted_users = [model_to_dict(user) for user in users]
         serializer = UserSerializer(users, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return self.get_paginated_response(serializer.data)
 
 
 class UserDetailedView(APIView):
