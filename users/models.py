@@ -2,6 +2,9 @@ from django.db import models
 
 
 class User(models.Model):
+    # class meta replaces users = User.objects.all().order_by("id") into models
+    class Meta:
+        ordering = ("id")
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     email = models.EmailField(unique=True)

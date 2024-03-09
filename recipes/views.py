@@ -7,9 +7,9 @@ from ingredients.models import Ingredient
 class RecipeView(APIView):
     def post(self, req: Request) -> Response:
         serializer = RecipeSerializer(data=req.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        # if not serializer.is_valid():
+            # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
         ingredients = serializer.validated_data.pop("ingredients")
         recipe = Recipe.objects.create(**serializer.validated_data)
 
@@ -25,3 +25,5 @@ class RecipeView(APIView):
 
         serializer = RecipeSerializer(recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    # def get(self, req: Request) -> Response:
+        # recipes = recipe.objects.filter(ingredients__name__iexact)
