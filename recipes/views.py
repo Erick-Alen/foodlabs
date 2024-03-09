@@ -16,8 +16,12 @@ class RecipeView(APIView):
         # get the ingredient list
 
         for ingredient_item in ingredients:
-            ingredient = Ingredient.objects.create(**ingredient_item)
-            ingredient.add(ingredient)
+            try:
+                # django field lookup => iexact
+                ingredient = Ingredient.objects.get(name__iexact=ingredient_item["name"])
+            except Ingredient.DoesNotExist:
+                ingredient = Ingredient.objects.create(**ingredient_item)
+            recipe.ingredients.add(ingredient)
 
         serializer = RecipeSerializer(recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

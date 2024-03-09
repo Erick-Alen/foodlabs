@@ -27,7 +27,12 @@ class UserView(APIView, PageNumberPagination):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def get(self, request: Request) -> Response:
-        users = User.objects.all()
+        email = req.query_params.get("email", None)
+        if email :
+            users = User.objects.filter(email__icontains=email)
+        else:
+            users = User.objects.all()
+
         result = self.paginate_queryset(users, request)
         # converted_users = [model_to_dict(user) for user in users]
         serializer = UserSerializer(users, many=True)
